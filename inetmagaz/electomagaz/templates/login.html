@@ -1,0 +1,139 @@
+{% include "header.html" %}
+
+<style>
+    .auth-container {
+        max-width: 450px;
+        margin: 60px auto 80px;
+        padding: 0 20px;
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    
+    .auth-title {
+        font-size: 28px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .auth-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .auth-form input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+    }
+    
+    .auth-form input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    
+    .auth-button {
+        width: 100%;
+        padding: 14px;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+    
+    .auth-button:hover {
+        background: #3498db;
+    }
+    
+    .auth-button:active {
+        transform: translateY(2px);
+    }
+    
+    .auth-error {
+        background: #fee;
+        color: #e74c3c;
+        padding: 12px 15px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+    
+    .auth-link {
+        display: block;
+        text-align: center;
+        margin-top: 25px;
+        color: #2c3e50;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .auth-link:hover {
+        color: #3498db;
+    }
+    
+    .auth-separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 30px 0;
+        color: #999;
+    }
+    
+    .auth-separator::before,
+    .auth-separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .auth-separator span {
+        padding: 0 10px;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <h1 class="auth-title">Вход в аккаунт</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="auth-error">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autofocus placeholder="Введите ваш email">
+            
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required placeholder="Введите ваш пароль">
+            
+            <button type="submit" class="auth-button">Войти</button>
+        </form>
+        
+        <div class="auth-separator">
+            <span>или</span>
+        </div>
+        
+        <a class="auth-link" href="/register">Нет аккаунта? Зарегистрироваться</a>
+    </div>
+</div>
+
+{% include "footer.html" %} 

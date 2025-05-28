@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Бренды</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .brands-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 40px 30px;
+        }
+        .brands-title {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .brands-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .brands-list li {
+            margin: 0;
+        }
+        .brand-link {
+            display: block;
+            padding: 16px 32px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+        }
+        .brand-link:hover {
+            background: #e9ecef;
+            color: #1a232e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .header-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .header-link:hover {
+            color: #2c3e50;
+        }
+        .user-menu {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .user-menu-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .user-menu-link:hover {
+            color: #2c3e50;
+        }
+        .cart-link {
+            position: relative;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    {% include "header.html" %}
+    <div class="brands-container">
+        <div class="brands-title">Бренды</div>
+        <ul class="brands-list">
+            {% for brand in brands %}
+                <li><a class="brand-link" href="/catalog?brand={{ brand.id }}">{{ brand.name }}</a></li>
+            {% empty %}
+                <li>Нет брендов.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html> 

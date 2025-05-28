@@ -1,0 +1,168 @@
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-column">
+                <h3 class="footer-heading">О компании</h3>
+                <ul class="footer-links">
+                    <li><a href="/about">О нас</a></li>
+                    <li><a href="/contacts">Контакты</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-heading">Сервис</h3>
+                <ul class="footer-links">
+                    <li><a href="/compare">Сравнение товаров</a></li>
+                    <li><a href="/favorites">Избранное</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3 class="footer-heading">Контакты</h3>
+                <div class="contact-info">
+                    <p><strong>Телефон:</strong> +7 (800) 123-45-67</p>
+                    <p><strong>Email:</strong> info@electromagaz.ru</p>
+                    <p><strong>Адрес:</strong> г. Москва, ул. Электронная, 123</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="copyright">
+                © 2023 ElectroMagaz. Все права защищены.
+            </div>
+            <div class="payment-methods">
+                <span class="payment-icon">💳</span>
+                <span class="payment-icon">💳</span>
+                <span class="payment-icon">💳</span>
+                <span class="payment-icon">💳</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    html, body {
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        display: block;
+        min-height: 100vh;
+    }
+    
+    .footer {
+        background-color: #2c3e50;
+        color: #fff;
+        padding: 50px 0 20px;
+        clear: both;
+        position: relative;
+        width: 100%;
+    }
+    
+    .footer-top {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+    
+    .footer-column {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 30px;
+        padding-right: 20px;
+    }
+    
+    .footer-heading {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+        color: #fff;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-heading:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 2px;
+        background-color: #e74c3c;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 8px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.7);
+        transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+        color: #fff;
+    }
+    
+    .contact-info {
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 20px;
+    }
+    
+    .contact-info p {
+        margin-bottom: 8px;
+    }
+    
+    .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .copyright {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    .payment-methods {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .payment-icon {
+        display: inline-block;
+        font-size: 1.5rem;
+        color: rgba(255,255,255,0.7);
+    }
+    
+    @media (max-width: 768px) {
+        .footer-top {
+            flex-direction: column;
+        }
+        
+        .footer-column {
+            width: 100%;
+            padding-right: 0;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+</body>
+</html> 

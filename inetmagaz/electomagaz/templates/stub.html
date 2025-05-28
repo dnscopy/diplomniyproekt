@@ -1,0 +1,130 @@
+{% include "header.html" %}
+
+<style>
+    .stub-container {
+        max-width: 1100px;
+        margin: 60px auto 80px;
+        padding: 0 20px;
+        text-align: center;
+    }
+    
+    .stub-card {
+        background: white;
+        border-radius: 12px;
+        padding: 60px 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stub-icon {
+        font-size: 80px;
+        margin-bottom: 30px;
+        color: #e74c3c;
+    }
+    
+    .stub-title {
+        font-size: 36px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+    
+    .stub-text {
+        font-size: 18px;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+    
+    .stub-return {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #2c3e50;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: background 0.2s, transform 0.2s;
+    }
+    
+    .stub-return:hover {
+        background: #3498db;
+        transform: translateY(-3px);
+    }
+    
+    .progress-bar {
+        height: 6px;
+        background: #f0f0f0;
+        width: 80%;
+        max-width: 400px;
+        margin: 0 auto 40px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #e74c3c, #f39c12);
+        width: 65%;
+        border-radius: 10px;
+    }
+    
+    .stub-decoration {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: rgba(231, 76, 60, 0.03);
+        z-index: 0;
+    }
+    
+    .stub-decoration-1 {
+        top: -150px;
+        right: -100px;
+    }
+    
+    .stub-decoration-2 {
+        bottom: -120px;
+        left: -80px;
+        background: rgba(52, 152, 219, 0.03);
+        width: 200px;
+        height: 200px;
+    }
+    
+    .stub-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    @media (max-width: 768px) {
+        .stub-title {
+            font-size: 28px;
+        }
+        
+        .stub-text {
+            font-size: 16px;
+        }
+        
+        .stub-icon {
+            font-size: 60px;
+        }
+    }
+</style>
+
+<div class="stub-container">
+    <div class="stub-card">
+        <div class="stub-decoration stub-decoration-1"></div>
+        <div class="stub-decoration stub-decoration-2"></div>
+        
+        <div class="stub-content">
+            <div class="stub-icon">🚧</div>
+            <h1 class="stub-title">{{ page_title }}</h1>
+            
+            <a href="/catalog" class="stub-return">Вернуться в каталог</a>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %} 

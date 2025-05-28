@@ -1,0 +1,316 @@
+{% include "header.html" %}
+
+<style>
+    .orders-container {
+        max-width: 1100px;
+        margin: 40px auto 80px;
+        padding: 0 20px;
+    }
+    
+    .orders-title {
+        font-size: 32px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+    
+    .orders-list {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .order-item {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 30px;
+    }
+    
+    .order-item:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .order-id {
+        font-weight: 500;
+        color: #2c3e50;
+        font-size: 18px;
+    }
+    
+    .order-date {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+    
+    .order-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .status-paid {
+        background: #e1f5fe;
+        color: #0288d1;
+    }
+    
+    .status-processing {
+        background: #fff8e1;
+        color: #ffa000;
+    }
+    
+    .status-delivered {
+        background: #e8f5e9;
+        color: #388e3c;
+    }
+    
+    .status-canceled {
+        background: #ffebee;
+        color: #d32f2f;
+    }
+    
+    .order-products {
+        margin: 20px 0;
+    }
+    
+    .order-product {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .order-product:last-child {
+        border-bottom: none;
+    }
+    
+    .product-image {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 6px;
+        margin-right: 15px;
+    }
+    
+    .product-image img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+    }
+    
+    .product-details {
+        flex: 1;
+    }
+    
+    .product-title {
+        font-weight: 500;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 4px;
+    }
+    
+    .product-meta {
+        font-size: 12px;
+        color: #7f8c8d;
+    }
+    
+    .product-price {
+        font-size: 14px;
+        color: #7f8c8d;
+        margin-left: 20px;
+    }
+    
+    .order-totals {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 15px;
+    }
+    
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+    
+    .total-row:last-child {
+        margin-bottom: 0;
+    }
+    
+    .total-label {
+        color: #7f8c8d;
+    }
+    
+    .total-value {
+        font-weight: 500;
+    }
+    
+    .order-total {
+        padding-top: 10px;
+        margin-top: 10px;
+        border-top: 1px solid #e0e0e0;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .order-address {
+        font-size: 14px;
+        color: #7f8c8d;
+        line-height: 1.5;
+    }
+    
+    .order-actions {
+        margin-top: 20px;
+    }
+    
+    .order-action-btn {
+        padding: 8px 15px;
+        border-radius: 4px;
+        background: #2c3e50;
+        color: white;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    
+    .order-action-btn:hover {
+        background: #3498db;
+    }
+    
+    .no-orders {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .no-orders-icon {
+        font-size: 60px;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+    }
+    
+    .no-orders-title {
+        font-size: 24px;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    
+    .no-orders-text {
+        font-size: 16px;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .catalog-btn {
+        display: inline-block;
+        padding: 12px 25px;
+        background: #2c3e50;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+    
+    .catalog-btn:hover {
+        background: #3498db;
+    }
+</style>
+
+<div class="orders-container">
+    <h1 class="orders-title">Мои заказы</h1>
+    
+    <div class="orders-list">
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-item">
+                    <div class="order-header">
+                        <div class="order-id">Заказ #{{ order.id }}</div>
+                        <div class="order-date">{{ order.created_at }}</div>
+                        <div class="order-status {% if order.status == 'paid' %}status-paid{% elif order.status == 'processing' %}status-processing{% elif order.status == 'delivered' %}status-delivered{% elif order.status == 'canceled' %}status-canceled{% endif %}">
+                            {% if order.status == 'paid' %}Оплачен
+                            {% elif order.status == 'processing' %}В обработке
+                            {% elif order.status == 'delivered' %}Доставлен
+                            {% elif order.status == 'canceled' %}Отменен
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="order-products">
+                        {% for item in order.items %}
+                            <div class="order-product">
+                                <div class="product-image">
+                                    <div style="color:#ccc;font-size:20px;">📷</div>
+                                </div>
+                                <div class="product-details">
+                                    <div class="product-title">{{ item.product_name }}</div>
+                                    <div class="product-meta">{{ item.brand_name }}</div>
+                                </div>
+                                <div class="product-price">
+                                    {{ item.quantity }} × {{ item.price }} ₽
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="order-totals">
+                        <div class="total-row">
+                            <span class="total-label">Сумма</span>
+                            <span class="total-value">{{ order.subtotal }} ₽</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Скидка</span>
+                            <span class="total-value">{{ order.discount }} ₽</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Доставка</span>
+                            <span class="total-value">{{ order.shipping }} ₽</span>
+                        </div>
+                        <div class="total-row order-total">
+                            <span>Итого</span>
+                            <span>{{ order.total }} ₽</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-address">
+                        <strong>Адрес доставки:</strong> {{ order.address }}, {{ order.city }}, {{ order.postal_code }}
+                    </div>
+                    
+                    <div class="order-actions">
+                        {% if order.status == 'processing' %}
+                            <form action="/orders/cancel/{{ order.id }}/" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="order-action-btn">Отменить заказ</button>
+                            </form>
+                        {% endif %}
+                        <a href="/catalog" class="order-action-btn">Продолжить покупки</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-orders">
+                <div class="no-orders-icon">📦</div>
+                <h2 class="no-orders-title">У вас пока нет заказов</h2>
+                <p class="no-orders-text">Здесь будет отображаться история ваших заказов. Перейдите в каталог, чтобы сделать свой первый заказ.</p>
+                <a href="/catalog" class="catalog-btn">Перейти в каталог</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% include "footer.html" %} 

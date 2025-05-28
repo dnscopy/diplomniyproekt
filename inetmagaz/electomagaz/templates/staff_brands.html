@@ -1,0 +1,87 @@
+{% include "header.html" %}
+<div style="max-width:1200px;margin:40px auto;background:#fff;padding:40px 30px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
+        <h1 style="font-size:2em;color:#2c3e50;margin:0;">Управление брендами</h1>
+        <a href="/staff/brands/add/" style="background:#2c3e50;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;">+ Добавить бренд</a>
+    </div>
+
+    {% if messages %}
+    <div style="margin-bottom:20px;">
+        {% for message in messages %}
+        <div style="padding:10px;margin-bottom:10px;border-radius:4px;{% if message.tags == 'error' %}background:#fee;color:#c00;{% else %}background:#efe;color:#0c0;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Search -->
+    <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:30px;">
+        <form method="GET" style="display:flex;gap:15px;align-items:flex-end;">
+            <div style="flex:1;">
+                <label style="display:block;margin-bottom:5px;color:#666;">Поиск</label>
+                <input type="text" name="search" value="{{ request.GET.search }}" style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;">
+            </div>
+            <div>
+                <button type="submit" style="background:#2c3e50;color:#fff;padding:8px 20px;border:none;border-radius:4px;cursor:pointer;">Поиск</button>
+                <a href="/staff/brands/" style="margin-left:10px;color:#666;text-decoration:none;">Сбросить</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Brands Table -->
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#f8f9fa;">
+                    <th style="padding:12px;text-align:left;border-bottom:2px solid #ddd;">ID</th>
+                    <th style="padding:12px;text-align:left;border-bottom:2px solid #ddd;">Название</th>
+                    <th style="padding:12px;text-align:left;border-bottom:2px solid #ddd;">Описание</th>
+                    <th style="padding:12px;text-align:center;border-bottom:2px solid #ddd;">Товаров</th>
+                    <th style="padding:12px;text-align:center;border-bottom:2px solid #ddd;">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for brand in brands %}
+                <tr style="border-bottom:1px solid #eee;">
+                    <td style="padding:12px;">{{ brand.id }}</td>
+                    <td style="padding:12px;">
+                        <a href="/catalog?brand={{ brand.id }}" style="color:#2c3e50;text-decoration:none;">{{ brand.name }}</a>
+                    </td>
+                    <td style="padding:12px;">{{ brand.description|truncatechars:100 }}</td>
+                    <td style="padding:12px;text-align:center;">{{ brand.products.count }}</td>
+                    <td style="padding:12px;text-align:center;">
+                        <a href="/staff/brands/edit/{{ brand.id }}/" style="color:#3498db;text-decoration:none;margin-right:10px;">✏️</a>
+                        <a href="/staff/brands/delete/{{ brand.id }}/" onclick="return confirm('Вы уверены, что хотите удалить этот бренд?')" style="color:#e74c3c;text-decoration:none;">🗑️</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding:20px;text-align:center;color:#666;">Бренды не найдены</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if brands.has_other_pages %}
+    <div style="margin-top:30px;text-align:center;">
+        {% if brands.has_previous %}
+        <a href="?page={{ brands.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" style="color:#2c3e50;text-decoration:none;margin:0 5px;">←</a>
+        {% endif %}
+        
+        {% for num in brands.paginator.page_range %}
+            {% if brands.number == num %}
+            <span style="background:#2c3e50;color:#fff;padding:5px 10px;border-radius:3px;margin:0 5px;">{{ num }}</span>
+            {% else %}
+            <a href="?page={{ num }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" style="color:#2c3e50;text-decoration:none;margin:0 5px;">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if brands.has_next %}
+        <a href="?page={{ brands.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" style="color:#2c3e50;text-decoration:none;margin:0 5px;">→</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div> 

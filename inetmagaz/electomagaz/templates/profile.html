@@ -1,0 +1,199 @@
+{% include "header.html" %}
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 60px auto 80px;
+        padding: 0 20px;
+    }
+    
+    .profile-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    
+    .profile-header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 30px 40px;
+        position: relative;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: #fff;
+        border-radius: 50%;
+        border: 5px solid rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 36px;
+    }
+    
+    .profile-name {
+        font-size: 28px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    
+    .profile-role {
+        display: inline-block;
+        background: rgba(255,255,255,0.15);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .profile-content {
+        padding: 40px;
+    }
+    
+    .profile-section {
+        margin-bottom: 35px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .profile-info {
+        display: flex;
+        margin-bottom: 15px;
+    }
+    
+    .profile-label {
+        width: 140px;
+        color: #666;
+        font-weight: 500;
+    }
+    
+    .profile-value {
+        flex: 1;
+        color: #2c3e50;
+    }
+    
+    .profile-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .profile-btn {
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s, transform 0.1s;
+    }
+    
+    .primary-btn {
+        background: #2c3e50;
+        color: white;
+    }
+    
+    .primary-btn:hover {
+        background: #3498db;
+    }
+    
+    .danger-btn {
+        background: #e74c3c;
+        color: white;
+    }
+    
+    .danger-btn:hover {
+        background: #c0392b;
+    }
+    
+    .profile-btn:active {
+        transform: translateY(2px);
+    }
+    
+    .admin-notice {
+        background: rgba(52, 152, 219, 0.1);
+        border-left: 4px solid #3498db;
+        padding: 15px 20px;
+        border-radius: 6px;
+        margin-bottom: 30px;
+    }
+    
+    .admin-notice a {
+        color: #2980b9;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    
+    .admin-notice a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if user.username|first %}
+                    {{ user.username|first|upper }}
+                {% else %}
+                    👤
+                {% endif %}
+            </div>
+            <h1 class="profile-name">{{ user.full_name|default:user.username }}</h1>
+            <div class="profile-role">{{ user.get_role_display }}</div>
+        </div>
+        
+        <div class="profile-content">
+            {% if user.role == 'admin' or user.role == 'staff' %}
+                <div class="admin-notice">
+                    {% if user.role == 'admin' %}
+                        <div>Вы администратор. <a href="/adminpanel">Перейти в админ-панель</a></div>
+                    {% elif user.role == 'staff' %}
+                        <div>Вы сотрудник. <a href="/staff">Перейти в панель управления</a></div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <div class="profile-section">
+                <h2 class="section-title">Личные данные</h2>
+                
+                <div class="profile-info">
+                    <div class="profile-label">Никнейм:</div>
+                    <div class="profile-value">{{ user.username }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-label">Email:</div>
+                    <div class="profile-value">{{ user.email|default:'Не указан' }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-label">Телефон:</div>
+                    <div class="profile-value">{{ user.phone|default:'Не указан' }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-label">ФИО:</div>
+                    <div class="profile-value">{{ user.full_name|default:'Не указано' }}</div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <a href="/orders" class="profile-btn primary-btn">Мои заказы</a>
+                <form method="post" action="/logout/" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="profile-btn danger-btn">Выйти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %} 

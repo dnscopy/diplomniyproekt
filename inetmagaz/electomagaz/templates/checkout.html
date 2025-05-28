@@ -1,0 +1,376 @@
+{% include "header.html" %}
+
+<style>
+    .checkout-container {
+        max-width: 1100px;
+        margin: 40px auto 80px;
+        padding: 0 20px;
+    }
+    
+    .checkout-title {
+        font-size: 32px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 30px;
+    }
+    
+    .checkout-content {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 30px;
+    }
+    
+    .checkout-form {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .payment-methods {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .payment-method {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    
+    .payment-method:hover {
+        border-color: #3498db;
+        background: #f8f9fa;
+    }
+    
+    .payment-method.active {
+        border-color: #3498db;
+        background: #ebf7ff;
+    }
+    
+    .payment-method input {
+        margin-right: 10px;
+    }
+    
+    .checkout-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        align-self: flex-start;
+        position: sticky;
+        top: 90px;
+    }
+    
+    .summary-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .cart-items-summary {
+        margin-bottom: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .cart-item-summary {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .item-image {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 6px;
+        margin-right: 15px;
+    }
+    
+    .item-image img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+    }
+    
+    .item-details {
+        flex: 1;
+    }
+    
+    .item-title {
+        font-weight: 500;
+        font-size: 14px;
+        color: #2c3e50;
+        margin-bottom: 4px;
+    }
+    
+    .item-meta {
+        font-size: 12px;
+        color: #7f8c8d;
+    }
+    
+    .item-quantity {
+        font-size: 14px;
+        color: #7f8c8d;
+        display: flex;
+        align-items: center;
+    }
+    
+    .order-totals {
+        margin-bottom: 30px;
+    }
+    
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    
+    .total-label {
+        color: #7f8c8d;
+    }
+    
+    .total-value {
+        font-weight: 500;
+    }
+    
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 500;
+        font-size: 18px;
+        color: #2c3e50;
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+    }
+    
+    .checkout-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 6px;
+        background: #2c3e50;
+        color: white;
+        font-weight: 500;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+    
+    .checkout-btn:hover {
+        background: #3498db;
+    }
+    
+    .checkout-btn:active {
+        transform: translateY(2px);
+    }
+    
+    .required {
+        color: #e74c3c;
+        margin-left: 4px;
+    }
+    
+    @media (max-width: 992px) {
+        .checkout-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .checkout-summary {
+            position: static;
+            margin-top: 30px;
+        }
+    }
+</style>
+
+<div class="checkout-container">
+    <h1 class="checkout-title">Оформление заказа</h1>
+    
+    <div class="checkout-content">
+        <div class="checkout-form">
+            <form id="order-form" method="post" action="/place-order/">
+                {% csrf_token %}
+                
+                <!-- Контактная информация -->
+                <div class="form-section">
+                    <h2 class="section-title">Контактная информация</h2>
+                    <div class="form-group">
+                        <label for="fullname">ФИО <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Телефон <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Доставка -->
+                <div class="form-section">
+                    <h2 class="section-title">Доставка</h2>
+                    <div class="form-group">
+                        <label for="address">Адрес <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Город <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postal_code">Индекс <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comment">Комментарий к заказу</label>
+                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Оплата -->
+                <div class="form-section">
+                    <h2 class="section-title">Оплата</h2>
+                    <div class="form-group">
+                        <label>Способ оплаты <span class="required">*</span></label>
+                        <div class="payment-methods">
+                            <label class="payment-method active">
+                                <input type="radio" name="payment_method" value="card" checked>
+                                Банковская карта
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment_method" value="cash">
+                                Наличными при получении
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Сводка заказа -->
+        <div class="checkout-summary">
+            <h2 class="summary-title">Ваш заказ</h2>
+            
+            <div class="cart-items-summary">
+                {% for item in cart_items %}
+                <div class="cart-item-summary">
+                    <div class="item-image">
+                        {% if item.product.images.first %}
+                            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                            <div style="color:#ccc;font-size:20px;">📷</div>
+                        {% endif %}
+                    </div>
+                    <div class="item-details">
+                        <div class="item-title">{{ item.product.name }}</div>
+                        <div class="item-meta">{{ item.product.brand.name }}</div>
+                    </div>
+                    <div class="item-quantity">
+                        {{ item.qty }} × {{ item.product.price }} ₽
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="order-totals">
+                <div class="total-row">
+                    <span class="total-label">Сумма</span>
+                    <span class="total-value">{{ total }} ₽</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Скидка</span>
+                    <span class="total-value">0 ₽</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Доставка</span>
+                    <span class="total-value">300 ₽</span>
+                </div>
+            </div>
+            
+            <div class="order-total">
+                <span>Итого</span>
+                <span>{{ total|add:300 }} ₽</span>
+            </div>
+            
+            <button type="submit" form="order-form" class="checkout-btn">Подтвердить заказ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Highlight selected payment method
+    document.querySelectorAll('.payment-method').forEach(method => {
+        method.addEventListener('click', function() {
+            document.querySelectorAll('.payment-method').forEach(m => {
+                m.classList.remove('active');
+            });
+            this.classList.add('active');
+        });
+    });
+</script>
+
+{% include "footer.html" %} 
