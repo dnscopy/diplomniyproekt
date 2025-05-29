@@ -11,10 +11,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
+# Представления (views) для интернет-магазина ElectroMagaz
+# Здесь реализованы функции для каталога, корзины, сравнения, оформления заказа и админки
+
+# --- Вспомогательная функция для шаблонов ---
 def get_item(dictionary, key):
     return dictionary.get(key, [])
 
+# --- Каталог товаров: фильтрация, поиск, пагинация ---
 def catalog(request):
+    # Каталог товаров: фильтрация, поиск, пагинация
     categories = Category.objects.filter(parent__isnull=True)
     all_categories = Category.objects.all()
     products_queryset = Product.objects.all()
@@ -158,9 +164,7 @@ def compare(request):
     })
 
 def redirect_by_role(user):
-    if user.role == 'admin':
-        return redirect('/adminpanel')
-    elif user.role == 'staff':
+    if user.role == 'staff':
         return redirect('/staff')
     else:
         return redirect('/catalog')
@@ -187,13 +191,14 @@ def register(request):
         full_name = request.POST.get("full_name")
         password = request.POST.get("password")
         role = request.POST.get("role")
+        
         if not email and not phone:
             messages.error(request, "Укажите email или телефон.")
         elif not username:
             messages.error(request, "Укажите никнейм.")
         elif not password:
             messages.error(request, "Укажите пароль.")
-        elif role not in ["staff", "customer"]:
+        elif role not in ["staff", "customer"]:  # Только staff и customer
             messages.error(request, "Выберите роль.")
         else:
             try:
@@ -216,13 +221,17 @@ def register(request):
                 messages.error(request, "Пользователь с таким email, телефоном или ником уже существует.")
     return render(request, "register.html")
 
+# --- Профиль пользователя ---
 @login_required
 def profile(request):
+    # Профиль пользователя (отображение личных данных)
     user = request.user
     return render(request, "profile.html", {"user": user})
 
+# --- Мои заказы (история заказов пользователя) ---
 @require_GET
 def orders(request):
+    # Страница "Мои заказы" (выводит историю заказов пользователя)
     # If the user is not logged in, redirect to login page
     if not request.user.is_authenticated:
         return redirect('/login?next=/orders')
@@ -235,8 +244,10 @@ def orders(request):
     
     return render(request, 'orders.html', {'orders': orders})
 
+# --- Оформление заказа (форма) ---
 @require_GET
 def checkout(request):
+    # Страница оформления заказа (форма для заполнения адреса, контактов и выбора оплаты)
     cart = request.session.get('cart', {})
     product_ids = list(cart.keys())
     products = Product.objects.filter(id__in=product_ids).prefetch_related('images')
@@ -253,8 +264,10 @@ def checkout(request):
         })
     return render(request, 'checkout.html', {'cart_items': cart_items, 'total': total})
 
+# --- Подтверждение и сохранение заказа ---
 @require_POST
 def place_order(request):
+    # Обработка оформления заказа (сохраняет заказ, очищает корзину, показывает сообщение)
     # Here you would typically:
     # 1. Validate the order data
     # 2. Create an order record in the database
@@ -343,40 +356,58 @@ def place_order(request):
     messages.success(request, 'Ваш заказ успешно оформлен! В ближайшее время с вами свяжется наш менеджер.')
     return redirect('/orders')
 
+# --- Страница "О компании" ---
 @require_GET
 def about(request):
+    # Страница "О компании"
     return render(request, 'about.html')
 
+# --- Страница "Вакансии" ---
 @require_GET
 def career(request):
+    # Страница "Вакансии"
     return stub(request, 'Вакансии')
 
+# --- Страница "Новости" ---
 @require_GET
 def news(request):
+    # Страница "Новости"
     return stub(request, 'Новости')
 
+# --- Страница "Оплата" ---
 @require_GET
 def payment(request):
+    # Страница "Оплата"
     return stub(request, 'Оплата')
 
+# --- Страница "Гарантия" ---
 @require_GET
 def warranty(request):
+    # Страница "Гарантия"
     return stub(request, 'Гарантия')
 
+# --- Страница "Возврат" ---
 @require_GET
 def returns(request):
+    # Страница "Возврат"
     return stub(request, 'Возврат')
 
+# --- Страница "Обратная связь" ---
 @require_GET
 def feedback(request):
+    # Страница "Обратная связь"
     return stub(request, 'Обратная связь')
 
+# --- Страница "Наши магазины" ---
 @require_GET
 def shops(request):
+    # Страница "Наши магазины"
     return stub(request, 'Наши магазины')
 
+# --- Панель сотрудника (статистика, последние товары) ---
 @login_required
 def staff_dashboard(request):
+    # Панель сотрудника (статистика, последние товары)
     if request.user.role != 'staff':
         return HttpResponseForbidden('Доступ только для сотрудников')
     from .models import Product, Brand, Category
@@ -392,20 +423,18 @@ def staff_dashboard(request):
         "last_products": last_products,
     })
 
-@login_required
-def admin_dashboard(request):
-    if request.user.role != 'admin':
-        return HttpResponseForbidden('Доступ только для админов')
-    return render(request, "admin_dashboard.html", {"user": request.user})
-
+# --- Детальная страница товара ---
 def product_detail(request, product_id):
+    # Детальная страница товара
     product = get_object_or_404(Product, id=product_id)
     specs = product.specifications.all()
     images = product.images.all()
     return render(request, "product_detail.html", {"product": product, "specs": specs, "images": images})
 
+# --- Добавление товара в корзину ---
 @require_POST
 def cart_add(request):
+    # Добавление товара в корзину
     product_id = request.POST.get('product_id')
     if not product_id:
         return redirect('/cart/')
@@ -414,11 +443,14 @@ def cart_add(request):
     request.session['cart'] = cart
     return redirect('/cart/')
 
+# --- Выход пользователя из системы ---
 @require_POST
 def logout_view(request):
+    # Выход пользователя из системы
     logout(request)
     return redirect('/catalog')
 
+# --- Управление категориями (список, поиск, пагинация) ---
 @login_required
 def staff_products(request):
     if request.user.role != 'staff':
@@ -459,6 +491,7 @@ def staff_products(request):
         'brands': brands,
     })
 
+# --- Добавление нового товара ---
 @login_required
 def staff_product_add(request):
     if request.user.role != 'staff':
@@ -501,6 +534,7 @@ def staff_product_add(request):
         'brands': Brand.objects.all()
     })
 
+# --- Редактирование товара ---
 @login_required
 def staff_product_edit(request, product_id):
     if request.user.role != 'staff':
@@ -546,6 +580,7 @@ def staff_product_edit(request, product_id):
         'brands': Brand.objects.all()
     })
 
+# --- Удаление товара ---
 @login_required
 def staff_product_delete(request, product_id):
     if request.user.role != 'staff':
@@ -562,6 +597,7 @@ def staff_product_delete(request, product_id):
     
     return redirect('staff_products')
 
+# --- Удаление изображения товара ---
 @login_required
 def staff_product_delete_image(request, image_id):
     if request.user.role != 'staff':
@@ -578,6 +614,7 @@ def staff_product_delete_image(request, image_id):
     
     return redirect('staff_product_edit', product_id=product_id)
 
+# --- Управление брендами (список, поиск, пагинация) ---
 @login_required
 def staff_brands(request):
     if request.user.role != 'staff':
@@ -600,6 +637,7 @@ def staff_brands(request):
         'brands': brands
     })
 
+# --- Добавление нового бренда ---
 @login_required
 def staff_brand_add(request):
     if request.user.role != 'staff':
@@ -624,6 +662,7 @@ def staff_brand_add(request):
     
     return render(request, 'staff_brand_add.html')
 
+# --- Редактирование бренда ---
 @login_required
 def staff_brand_edit(request, brand_id):
     if request.user.role != 'staff':
@@ -650,6 +689,7 @@ def staff_brand_edit(request, brand_id):
         'brand': brand
     })
 
+# --- Удаление бренда ---
 @login_required
 def staff_brand_delete(request, brand_id):
     if request.user.role != 'staff':
@@ -666,8 +706,10 @@ def staff_brand_delete(request, brand_id):
     
     return redirect('staff_brands')
 
+# --- Управление категориями (список, поиск, пагинация) ---
 @login_required
 def staff_categories(request):
+    # Управление категориями (для сотрудников): список, поиск, пагинация
     if request.user.role != 'staff':
         return HttpResponseForbidden('Доступ только для сотрудников')
     
@@ -691,8 +733,10 @@ def staff_categories(request):
         'categories': categories
     })
 
+# --- Добавление новой категории ---
 @login_required
 def staff_category_add(request):
+    # Добавление новой категории (для сотрудников)
     if request.user.role != 'staff':
         return HttpResponseForbidden('Доступ только для сотрудников')
     
@@ -718,6 +762,7 @@ def staff_category_add(request):
         'categories': Category.objects.all()
     })
 
+# --- Редактирование категории ---
 @login_required
 def staff_category_edit(request, category_id):
     if request.user.role != 'staff':
@@ -748,6 +793,7 @@ def staff_category_edit(request, category_id):
         'categories': Category.objects.all()
     })
 
+# --- Удаление категории ---
 @login_required
 def staff_category_delete(request, category_id):
     if request.user.role != 'staff':
@@ -770,6 +816,7 @@ def staff_category_delete(request, category_id):
     
     return redirect('staff_categories')
 
+# --- Обновление количества товара в корзине ---
 @require_POST
 def cart_update(request):
     """Update the quantity of an item in the cart or remove it."""
@@ -803,6 +850,7 @@ def cart_update(request):
     
     return JsonResponse({'status': 'error', 'message': 'Invalid action'})
 
+# --- Добавление товара в сравнение ---
 @require_POST
 def compare_add(request):
     product_id = request.POST.get('product_id')
@@ -826,6 +874,7 @@ def compare_add(request):
     next_url = request.POST.get('next', '/catalog')
     return redirect(next_url)
 
+# --- Удаление товара из сравнения ---
 @require_POST
 def compare_remove(request):
     product_id = request.POST.get('product_id')
@@ -843,6 +892,7 @@ def compare_remove(request):
     
     return redirect('compare')
 
+# --- Очистка списка сравнения ---
 @require_POST
 def compare_clear(request):
     # Очищаем список сравнения
@@ -850,6 +900,7 @@ def compare_clear(request):
     messages.success(request, 'Список сравнения очищен')
     return redirect('compare')
 
+# --- Добавление товара в избранное ---
 @require_POST
 def favorites_add(request):
     product_id = request.POST.get('product_id')
@@ -871,6 +922,7 @@ def favorites_add(request):
     next_url = request.POST.get('next', '/catalog')
     return redirect(next_url)
 
+# --- Удаление товара из избранного ---
 @require_POST
 def favorites_remove(request):
     product_id = request.POST.get('product_id')
@@ -888,6 +940,7 @@ def favorites_remove(request):
     
     return redirect('favorites')
 
+# --- Очистка избранного ---
 @require_POST
 def favorites_clear(request):
     # Clear favorites list

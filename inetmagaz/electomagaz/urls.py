@@ -34,7 +34,6 @@ urlpatterns = [
     path('feedback', views.feedback, name='feedback'),
     path('shops', views.shops, name='shops'),
     path('staff', views.staff_dashboard, name='staff_dashboard'),
-    path('adminpanel', views.admin_dashboard, name='admin_dashboard'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('logout/', views.logout_view, name='logout'),
     path('staff/products/', views.staff_products, name='staff_products'),
